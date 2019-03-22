@@ -35,6 +35,7 @@ public class Main {
 			}
 			while(!(MineField.triggeredMine() || MineField.countMinesLeft() == 0) && running){
 				showGameScreen();
+				//to do input
 				//InputCoordinate();
 
 			}
