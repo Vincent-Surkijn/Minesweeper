@@ -51,9 +51,14 @@ public class Grid extends Main{
 			}
 		}
 	}
-
+	/*
+	 * methods who return the lenght and hight of the grid
+	 */
 	public int getLenght(){
 		return grid.length;
+	}
+	public int getHight(){
+		return grid[0].length;
 	}
 	/**
 	 * Makes a ordered string of the minefield (looking if the tiles are hidden or not)
@@ -138,7 +143,7 @@ public class Grid extends Main{
 	 * @param column
 	 */
 	public int CheckMine(int row,int column) {
-		if (row < 0 || row > size|| column < 0 || column > columnSize) {
+		/*if (row < 0 || row > size|| column < 0 || column > columnSize) {
 			return 0;
 		}
 		else {
@@ -149,6 +154,8 @@ public class Grid extends Main{
 				return 0;
 			}
 		}
+		*/
+		return -1;
 	}
 	public int checkNeighbors(int row, int column){
 		int neighbors = 0;

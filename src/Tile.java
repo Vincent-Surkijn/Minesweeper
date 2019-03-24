@@ -5,6 +5,7 @@ public abstract class Tile {
 	protected int neighbors;
 	protected boolean isvisual;
 	protected boolean mine;
+	protected boolean flagged;
 
 	/**
 	 * makes tile, sets row, column to input
@@ -16,6 +17,7 @@ public abstract class Tile {
 	public Tile(int in_row, char in_column) {
 		row = in_row;
 		column = in_column;
+		flagged = false;
 		isvisual = false;
 	}
 

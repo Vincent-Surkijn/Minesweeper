@@ -4,11 +4,9 @@ public class Main {
 
 	private static Grid MineField;
 	private static char[] alphabet;
-	protected static int size;
-	protected static int amountMines;
-	protected static int columnSize;
+	private static Scanner scan;
 
-	/**
+    /**
 	 * the heard of the game. It start by asking the difficulty then it creates a minefield
 	 * the game begins.
 	 * the game itself is a loop of 3 parts
@@ -19,27 +17,21 @@ public class Main {
 	 * the difficulty is asked again and you can start again
 	 */
 	public static void main(String[] args) {
+	    //for char to int conversion
 		alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+		//indicator the game is still in proces
 		boolean running = true;
-		size = 8;
-		amountMines = 10;
-		while(running){
+
+        while(running){
 			switch(DifficultyInput()){
 				case EASY:
-					MineField = new Grid(size, amountMines);
-					columnSize = size;
+					MineField = new Grid(8, 10);
 					break;
 				case MEDIUM:
-					size = 16;
-					amountMines = 40;
-					MineField = new Grid(size, amountMines);
-					columnSize = size;
+					MineField = new Grid(16, 40);
 					break;
 				case HARD:
-					size = 30;
-					amountMines = 99;
-					MineField = new Grid(size, amountMines);
-					columnSize = 16;
+					MineField = new Grid(30, 99);
 					break;
 				case END:
 					running = false;
@@ -47,6 +39,9 @@ public class Main {
 			}
 			while(!(MineField.triggeredMine() || MineField.countMinesLeft() == 0) && running){
 				showGameScreen();
+				while(inputUser()){
+                    System.out.println("Invalid input");
+                };
 			}
 		}
 	}
@@ -66,7 +61,7 @@ public class Main {
 				"\nIf you want to end the game press:\n" +
 				"'end'");
 		System.out.print("->");
-		Scanner scan = new Scanner(System.in);
+		scan = new Scanner(System.in);
 		String input = scan.next().toLowerCase().trim();
 		if(input.equals("e")){
 			return Level.EASY;
@@ -92,32 +87,6 @@ public class Main {
 	private static void showGameScreen() {
 		System.out.println("Mines left:"+ MineField.countMinesLeft()+"\n\n");
 		System.out.println(MineField.mineFieldToString());
-		System.out.println("Enter a number for the row: ");
-		Scanner scan = new Scanner(System.in);
-		String  input = scan.next();
-		int row = Integer.valueOf(input);
-		int x =0;
-		if (row < 0 || row > size) {
-			System.out.println("Unvalid row");
-			showGameScreen();
-		}
-		else {
-			x = row - 1;
-		}
-		System.out.println("Enter a character for the column: ");
-		Scanner scan2 = new Scanner(System.in);
-		String input2 = scan2.next();
-		char[] input2char = input2.toCharArray();
-		int column = CharToInt(input2char[0]);
-		int y = 0;
-		if (column < 0 || column > columnSize){
-			System.out.println("Unvalid column");
-			showGameScreen();
-		}
-		else {
-			y = column;
-		}
-		InputCoordinate(x,y);
 	}
 
 	/**
@@ -131,22 +100,44 @@ public class Main {
 	 *         doesn't matter if is marked or if it is just a tile the flag always is placed and the minesleft variable goes down one
 	 *         
 	 */
-	private static void InputCoordinate(int row, int column) {
-		if (MineField.getTile(row,column).mine){
-			System.out.println("Game over");
-			MineField.reset();
-		}
-		else {
-			MineField.checkNeighbors(row, column);
-			/*MineField.checkNeighbors(row + 1, column + 1);
-			MineField.checkNeighbors(row, column + 1);
-			MineField.checkNeighbors(row - 1, column + 1);
-			MineField.checkNeighbors(row + 1,column);
-			MineField.checkNeighbors(row - 1, column - 1);
-			MineField.checkNeighbors(row, column - 1);
-			MineField.checkNeighbors(row + 1, column - 1);*/
-		}
+	private static boolean inputUser() {
+	    //input
+        System.out.println("\nplease insert the coordinates:\npress i if you want more info");
+        System.out.print("->");
+        scan = new Scanner(System.in);
+        String inputstring = scan.next().toLowerCase().trim();
+        if(inputstring.equals("i")){
+            System.out.println("the input form is like this:\n C/F:row, column" +
+                    "\n - C/F stand for click (C) or flag (F) so press one of the two" +
+                    "\n - the row bust be the letter of the row between a and "+IntToChar(MineField.getHight())+
+                    "\n - the column should be the number of the column between 0 and "+ MineField.getLenght()+
+                    "\n Example: C:a2\nThis means a click on the first row and second column\n\n");
+            System.out.print("->");
+            scan = new Scanner(System.in);
+            inputstring = scan.next().toLowerCase().trim();
+        }
+        //boolean calculation if input in valid
+        boolean validinput =
+                inputstring.length() == 4 || inputstring.length() == 5
+                && inputstring.charAt(0) == 'f' || inputstring.charAt(0) == 'c'
+                && inputstring.charAt(1) == ':'
+                && 0 < CharToInt(inputstring.charAt(2)) && CharToInt(inputstring.charAt(2)) < MineField.getHight()
+                && Integer.parseInt(inputstring.substring(3)) < MineField.getLenght();
+        if(!validinput){
+            return true;
+            //method ends here
+        }
+        else{
+            GameAlgorithm(inputstring);
+            return false;
+        }
 	}
+	/**
+     * This class contains the actual algorithm for the game itself
+	 */
+	private static void GameAlgorithm(String input){
+	    //empty
+    }
 
 	/**
 	 * used to convert the char to integers everywhere in the code
@@ -168,6 +159,6 @@ public class Main {
 	}
 
 	public static void reset(){
-		MineField = new Grid(size, amountMines);
+		//MineField = new Grid(size, amountMines);
 	}
 }
