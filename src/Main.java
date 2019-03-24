@@ -21,8 +21,9 @@ public class Main {
 		alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 		//indicator the game is still in proces
 		boolean running = true;
-
+        //full program loop
         while(running){
+            //grid creation depending on difficulty
 			switch(DifficultyInput()){
 				case EASY:
 					MineField = new Grid(8, 10);
@@ -37,12 +38,16 @@ public class Main {
 					running = false;
 					break;
 			}
+			//the iteration of one full game
 			while(!(MineField.triggeredMine() || MineField.countMinesLeft() == 0) && running){
 				showGameScreen();
 				while(inputUser()){
-                    System.out.println("Invalid input");
-                };
+                    System.out.println("\nError\n");
+                }
 			}
+            System.out.println("Game over");
+			MineField.makeallvisual();
+			showGameScreen();
 		}
 	}
 
@@ -109,7 +114,7 @@ public class Main {
         if(inputstring.equals("i")){
             System.out.println("the input form is like this:\n C/F:row, column" +
                     "\n - C/F stand for click (C) or flag (F) so press one of the two" +
-                    "\n - the row bust be the letter of the row between a and "+IntToChar(MineField.getHight())+
+                    "\n - the row bust be the letter of the row between a and " + IntToChar(MineField.getHight())+
                     "\n - the column should be the number of the column between 0 and "+ MineField.getLenght()+
                     "\n Example: C:a2\nThis means a click on the first row and second column\n\n");
             System.out.print("->");
@@ -124,24 +129,41 @@ public class Main {
                 && 0 < CharToInt(inputstring.charAt(2)) && CharToInt(inputstring.charAt(2)) < MineField.getHight()
                 && Integer.parseInt(inputstring.substring(3)) < MineField.getLenght();
         if(!validinput){
+            System.out.println("\n\nInvalid input");
             return true;
-            //method ends here
         }
         else{
-            GameAlgorithm(inputstring);
-            return false;
+            //will only return false if everything went good
+            return GameAlgorithm(inputstring);
         }
 	}
+
 	/**
      * This class contains the actual algorithm for the game itself
 	 */
-	private static void GameAlgorithm(String input){
-	    //empty
+	private static boolean GameAlgorithm(String input){
+	    Tile ChosenTile = MineField.getTile(CharToInt(input.charAt(2)), Integer.parseInt(input.substring(3)));
+	    if(ChosenTile.isvisual){
+            System.out.println("\n\nIs already unlocked");
+	        return true;
+        }
+	    if(input.split(":")[0].equals("f")){
+	        ChosenTile.toggleFlag();
+	        return false;
+        }
+	    if(input.split(":")[0].equals("c") && !ChosenTile.isFlagged()){
+            MineField.makeTileVisual(CharToInt(input.charAt(2)), Integer.parseInt(input.substring(3)));
+            System.out.println("komt hier");
+            return false;
+        }
+	    else{
+            System.out.println("\n\nThis tile is flagged and can't be clicked");
+            return true;
+        }
     }
 
 	/**
 	 * used to convert the char to integers everywhere in the code
-	 * @param character
 	 */
 	public static int CharToInt(char character) {
 		int place = 0;
@@ -154,11 +176,11 @@ public class Main {
 		return -1;
 	}
 
+    /**
+     * converts a integer to a character of the alphabet
+     */
 	public static char IntToChar(int number){
 		return alphabet[number];
 	}
 
-	public static void reset(){
-		//MineField = new Grid(size, amountMines);
-	}
 }
