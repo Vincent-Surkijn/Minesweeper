@@ -4,6 +4,9 @@ public class Main {
 
 	private static Grid MineField;
 	private static char[] alphabet;
+	protected static int size;
+	protected static int amountMines;
+	protected static int columnSize;
 
 	/**
 	 * the heard of the game. It start by asking the difficulty then it creates a minefield
@@ -18,16 +21,25 @@ public class Main {
 	public static void main(String[] args) {
 		alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 		boolean running = true;
+		size = 8;
+		amountMines = 10;
 		while(running){
 			switch(DifficultyInput()){
 				case EASY:
-					MineField = new Grid(8, 10);
+					MineField = new Grid(size, amountMines);
+					columnSize = size;
 					break;
 				case MEDIUM:
-					MineField = new Grid(16, 40);
+					size = 16;
+					amountMines = 40;
+					MineField = new Grid(size, amountMines);
+					columnSize = size;
 					break;
 				case HARD:
-					MineField = new Grid(30, 99);
+					size = 30;
+					amountMines = 99;
+					MineField = new Grid(size, amountMines);
+					columnSize = 16;
 					break;
 				case END:
 					running = false;
@@ -35,10 +47,8 @@ public class Main {
 			}
 			while(!(MineField.triggeredMine() || MineField.countMinesLeft() == 0) && running){
 				showGameScreen();
-				//InputCoordinate();
 			}
 		}
-
 	}
 
 	/**
@@ -82,6 +92,32 @@ public class Main {
 	private static void showGameScreen() {
 		System.out.println("Mines left:"+ MineField.countMinesLeft()+"\n\n");
 		System.out.println(MineField.mineFieldToString());
+		System.out.println("Enter a number for the row: ");
+		Scanner scan = new Scanner(System.in);
+		String  input = scan.next();
+		int row = Integer.valueOf(input);
+		int x =0;
+		if (row < 0 || row > size) {
+			System.out.println("Unvalid row");
+			showGameScreen();
+		}
+		else {
+			x = row - 1;
+		}
+		System.out.println("Enter a character for the column: ");
+		Scanner scan2 = new Scanner(System.in);
+		String input2 = scan2.next();
+		char[] input2char = input2.toCharArray();
+		int column = CharToInt(input2char[0]);
+		int y = 0;
+		if (column < 0 || column > columnSize){
+			System.out.println("Unvalid column");
+			showGameScreen();
+		}
+		else {
+			y = column;
+		}
+		InputCoordinate(x,y);
 	}
 
 	/**
@@ -95,9 +131,21 @@ public class Main {
 	 *         doesn't matter if is marked or if it is just a tile the flag always is placed and the minesleft variable goes down one
 	 *         
 	 */
-	private static void InputCoordinate() {
-		// TODO - implement Main.InputCoordinate
-		throw new UnsupportedOperationException();
+	private static void InputCoordinate(int row, int column) {
+		if (MineField.getTile(row,column).mine){
+			System.out.println("Game over");
+			MineField.reset();
+		}
+		else {
+			MineField.checkNeighbors(row, column);
+			/*MineField.checkNeighbors(row + 1, column + 1);
+			MineField.checkNeighbors(row, column + 1);
+			MineField.checkNeighbors(row - 1, column + 1);
+			MineField.checkNeighbors(row + 1,column);
+			MineField.checkNeighbors(row - 1, column - 1);
+			MineField.checkNeighbors(row, column - 1);
+			MineField.checkNeighbors(row + 1, column - 1);*/
+		}
 	}
 
 	/**
@@ -117,5 +165,9 @@ public class Main {
 
 	public static char IntToChar(int number){
 		return alphabet[number];
+	}
+
+	public static void reset(){
+		MineField = new Grid(size, amountMines);
 	}
 }

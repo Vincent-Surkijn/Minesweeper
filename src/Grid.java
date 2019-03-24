@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Grid {
+public class Grid extends Main{
 
 	private Tile[][] grid;
 	//private int minesleft;
@@ -52,9 +52,16 @@ public class Grid {
 		}
 	}
 
+	public int getLenght(){
+		return grid.length;
+	}
 	/**
 	 * Makes a ordered string of the minefield (looking if the tiles are hidden or not)
 	 */
+	public Tile getTile(int row, int column){
+		return grid[row][column];
+	}
+
 	public String mineFieldToString() {
 		String outputstring = "|";
 		for(int i = 0; i < grid.length; i++){
@@ -131,7 +138,10 @@ public class Grid {
 	 * @param column
 	 */
 	public int CheckMine(int row,int column) {
-		if (row > 0 || row < grid.length || column > 0 || column < grid.length ) {
+		if (row < 0 || row > size|| column < 0 || column > columnSize) {
+			return 0;
+		}
+		else {
 			Tile tileToCheck = grid[row][column];
 			if (tileToCheck.mine) {
 				return 1;
@@ -139,19 +149,18 @@ public class Grid {
 				return 0;
 			}
 		}
-		else {
-			return 0;
-		}
 	}
-	public int checkNeighbors(Tile tileToCheck){
+	public int checkNeighbors(int row, int column){
 		int neighbors = 0;
-		neighbors += CheckMine(tileToCheck.row + 1, Main.CharToInt(tileToCheck.column) + 1);
-		neighbors += CheckMine(tileToCheck.row, Main.CharToInt(tileToCheck.column) + 1);
-		neighbors += CheckMine(tileToCheck.row - 1, Main.CharToInt(tileToCheck.column) + 1);
-		neighbors += CheckMine(tileToCheck.row + 1, Main.CharToInt(tileToCheck.column));
-		neighbors += CheckMine(tileToCheck.row - 1, Main.CharToInt(tileToCheck.column) - 1);
-		neighbors += CheckMine(tileToCheck.row, Main.CharToInt(tileToCheck.column) - 1);
-		neighbors += CheckMine(tileToCheck.row + 1, Main.CharToInt(tileToCheck.column) - 1);
+		neighbors += CheckMine(row + 1, column + 1);
+		neighbors += CheckMine(row, column + 1);
+		neighbors += CheckMine(row - 1, column + 1);
+		neighbors += CheckMine(row + 1,column);
+		neighbors += CheckMine(row - 1, column - 1);
+		neighbors += CheckMine(row, column - 1);
+		neighbors += CheckMine(row + 1, column - 1);
+		grid[row][column].neighbors = neighbors;
+		grid[row][column].isvisual = true;
 		return neighbors;
 	}
 
