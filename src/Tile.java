@@ -17,8 +17,8 @@ public abstract class Tile {
 		row = in_row;
 		column = in_column;
 		isvisual = false;
-		this.mineNeighbors();
 	}
+
 
 	//public abstract void checkNeighbors();
 
@@ -41,14 +41,11 @@ public abstract class Tile {
 		}
 	}
 
-	public abstract void mineNeighbors();
-
 	/**
 	 * this resets the neighbor value to zero
 	 */
 	public void resetNeighbors() {
-		// TODO - implement Tile.resetNeighbors
-		throw new UnsupportedOperationException();
+		neighbors = 0;
 	}
 
 	public boolean isMine() {

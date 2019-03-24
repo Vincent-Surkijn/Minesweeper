@@ -130,9 +130,29 @@ public class Grid {
 	 * @param row
 	 * @param column
 	 */
-	public void CheckMine(int row, char column) {
-		// TODO - implement Grid.CheckMine
-		throw new UnsupportedOperationException();
+	public int CheckMine(int row,int column) {
+		if (row > 0 || row < grid.length || column > 0 || column < grid.length ) {
+			Tile tileToCheck = grid[row][column];
+			if (tileToCheck.mine) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+		else {
+			return 0;
+		}
+	}
+	public int checkNeighbors(Tile tileToCheck){
+		int neighbors = 0;
+		neighbors += CheckMine(tileToCheck.row + 1, Main.CharToInt(tileToCheck.column) + 1);
+		neighbors += CheckMine(tileToCheck.row, Main.CharToInt(tileToCheck.column) + 1);
+		neighbors += CheckMine(tileToCheck.row - 1, Main.CharToInt(tileToCheck.column) + 1);
+		neighbors += CheckMine(tileToCheck.row + 1, Main.CharToInt(tileToCheck.column));
+		neighbors += CheckMine(tileToCheck.row - 1, Main.CharToInt(tileToCheck.column) - 1);
+		neighbors += CheckMine(tileToCheck.row, Main.CharToInt(tileToCheck.column) - 1);
+		neighbors += CheckMine(tileToCheck.row + 1, Main.CharToInt(tileToCheck.column) - 1);
+		return neighbors;
 	}
 
 

@@ -5,9 +5,6 @@ public class MineTile extends Tile {
 		throw new UnsupportedOperationException();
 	}
 
-	public void mineNeighbors() {
-		neighbors = -1;
-	}
 
 	/**
 	 * does the same as the tile only sets mine to true
