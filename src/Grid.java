@@ -138,7 +138,7 @@ public class Grid extends Main{
 	 * @param column
 	 */
 	public int CheckMine(int row,int column) {
-		if (row < 0 || row > size|| column < 0 || column > columnSize) {
+		if (row < 0 || row > size - 1|| column < 0 || column > columnSize - 1) {
 			return 0;
 		}
 		else {
@@ -152,17 +152,35 @@ public class Grid extends Main{
 	}
 	public int checkNeighbors(int row, int column){
 		int neighbors = 0;
-		neighbors += CheckMine(row + 1, column + 1);
+		neighbors += CheckMine(row, column);
 		neighbors += CheckMine(row, column + 1);
-		neighbors += CheckMine(row - 1, column + 1);
-		neighbors += CheckMine(row + 1,column);
-		neighbors += CheckMine(row - 1, column - 1);
 		neighbors += CheckMine(row, column - 1);
-		neighbors += CheckMine(row + 1, column - 1);
+		neighbors += CheckMine(row + 1,column);
+		neighbors += CheckMine(row - 1, column);
+		neighbors += CheckMine(row + 1, column + 1);
+		neighbors += CheckMine(row - 1, column - 1);
+        neighbors += CheckMine(row + 1, column - 1);
+        neighbors += CheckMine(row - 1, column + 1);
 		grid[row][column].neighbors = neighbors;
 		grid[row][column].isvisual = true;
 		return neighbors;
 	}
 
-
+    public boolean checkIfWon(){
+        boolean won = false;
+	    int notVisual = 0;
+	    for (Tile[] tiles: grid) {
+            for(Tile tile: tiles){
+                if (!tile.mine) {
+                    if (!tile.isvisual) {
+                        notVisual++;
+                    }
+                }
+            }
+        }
+	    if (notVisual == 0){
+            won = true;
+        }
+	    return won;
+    }
 }

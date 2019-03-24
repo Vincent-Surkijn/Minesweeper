@@ -90,34 +90,41 @@ public class Main {
 	 * shows the grid and all the other features like how many bombs left and difficulty and so on...
 	 */
 	private static void showGameScreen() {
-		System.out.println("Mines left:"+ MineField.countMinesLeft()+"\n\n");
-		System.out.println(MineField.mineFieldToString());
-		System.out.println("Enter a number for the row: ");
-		Scanner scan = new Scanner(System.in);
-		String  input = scan.next();
-		int row = Integer.valueOf(input);
-		int x =0;
-		if (row < 0 || row > size) {
-			System.out.println("Unvalid row");
-			showGameScreen();
+		MineField.checkIfWon();
+		if (MineField.checkIfWon()){
+			System.out.println("You won!");
+			reset();
 		}
 		else {
-			x = row - 1;
+			System.out.println("Mines left:"+ MineField.countMinesLeft()+"\n\n");
+			System.out.println(MineField.mineFieldToString());
+			System.out.println("Enter a number for the row: ");
+			Scanner scan = new Scanner(System.in);
+			String  input = scan.next();
+			int row = Integer.valueOf(input);
+			int x =0;
+				if (row < 0 || row > size) {
+					System.out.println("Invalid row");
+					showGameScreen();
+				}
+			else {
+				x = row - 1;
+			}
+			System.out.println("Enter a character for the column: ");
+			Scanner scan2 = new Scanner(System.in);
+			String input2 = scan2.next();
+			char[] input2char = input2.toCharArray();
+			int column = CharToInt(input2char[0]);
+			int y = 0;
+			if (column < 0 || column > columnSize){
+				System.out.println("Invalid column");
+				showGameScreen();
+			}
+			else {
+				y = column;
+			}
+			InputCoordinate(x,y);
 		}
-		System.out.println("Enter a character for the column: ");
-		Scanner scan2 = new Scanner(System.in);
-		String input2 = scan2.next();
-		char[] input2char = input2.toCharArray();
-		int column = CharToInt(input2char[0]);
-		int y = 0;
-		if (column < 0 || column > columnSize){
-			System.out.println("Unvalid column");
-			showGameScreen();
-		}
-		else {
-			y = column;
-		}
-		InputCoordinate(x,y);
 	}
 
 	/**
