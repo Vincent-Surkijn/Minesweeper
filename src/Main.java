@@ -5,6 +5,7 @@ public class Main {
 	private static Grid MineField;
 	private static char[] alphabet;
 	private static Scanner scan;
+	private static int amountMines;
 
     /**
 	 * the heard of the game. It start by asking the difficulty then it creates a minefield
@@ -26,12 +27,15 @@ public class Main {
             //grid creation depending on difficulty
 			switch(DifficultyInput()){
 				case EASY:
+					amountMines =10;
 					MineField = new Grid(8, 10);
 					break;
 				case MEDIUM:
+					amountMines = 40;
 					MineField = new Grid(16, 40);
 					break;
 				case HARD:
+					amountMines = 99;
 					MineField = new Grid(30, 99);
 					break;
 				case END:
@@ -39,13 +43,18 @@ public class Main {
 					break;
 			}
 			//the iteration of one full game
-			while(!(MineField.triggeredMine() || MineField.countMinesLeft() == 0) && running){
+			while(!(MineField.triggeredMine() || MineField.checkIfWon()) && running){
 				showGameScreen();
 				while(inputUser()){
                     System.out.println("\nError\n");
                 }
 			}
-            System.out.println("Game over");
+			if(MineField.triggeredMine()) {
+				System.out.println("Game over");
+			}
+			else {
+				System.out.println("You won!");
+			}
 			MineField.makeallvisual();
 			showGameScreen();
 		}
@@ -90,7 +99,7 @@ public class Main {
 	 * shows the grid and all the other features like how many bombs left and difficulty and so on...
 	 */
 	private static void showGameScreen() {
-		System.out.println("Mines left:"+ MineField.countMinesLeft()+"\n\n");
+		System.out.println("Amount of mines:"+ MineField.countMinesLeft()+"\n\n");
 		System.out.println(MineField.mineFieldToString());
 	}
 
@@ -148,8 +157,13 @@ public class Main {
 	        return true;
         }
 	    if(input.split(":")[0].equals("f")){
-	        ChosenTile.toggleFlag();
-	        return false;
+	    	if(MineField.getAmountFlags() < amountMines) {
+				ChosenTile.toggleFlag();
+			}
+	    	else {
+				System.out.println("You can only flag as much tiles as there are mines!");
+			}
+	    	return false;
         }
 	    if(input.split(":")[0].equals("c") && !ChosenTile.isFlagged()){
             MineField.makeTileVisual(CharToInt(input.charAt(2)), Integer.parseInt(input.substring(3)));
@@ -181,6 +195,10 @@ public class Main {
      */
 	public static char IntToChar(int number){
 		return alphabet[number];
+	}
+
+	public static int getAmountMines(){
+		return amountMines;
 	}
 
 }

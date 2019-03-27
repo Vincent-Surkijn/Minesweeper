@@ -169,11 +169,53 @@ public class Grid extends Main{
 			}
 		}
 	}
+
 	public void makeallvisual(){
 		for(Tile[] column: grid){
 			for(Tile tile: column){
 				tile.makeVisual();
 			}
 		}
+	}
+
+	public boolean checkIfWon(){
+		boolean won = false;
+		int notVisual = 0;
+		int mineFlagged = 0;
+		for (Tile[] tiles: grid) {
+			for(Tile tile: tiles){
+				if (!tile.mine) {
+					if (!tile.isvisual) {
+						notVisual++;
+					}
+				}
+				else{
+					if(tile.flagged){
+						mineFlagged++;
+					}
+				}
+			}
+		}
+		if (notVisual == 0){
+			won = true;
+			System.out.println("you have clicked all empty tiles!");
+		}
+		if (mineFlagged == Main.getAmountMines()){
+			won = true;
+			System.out.println("You have flagged all mines!");
+		}
+		return won;
+	}
+
+	public int getAmountFlags(){
+		int tileFlagged = 0;
+		for (Tile[] tiles: grid) {
+			for(Tile tile: tiles){
+				if(tile.flagged){
+					tileFlagged++;
+				}
+			}
+		}
+		return tileFlagged;
 	}
 }
