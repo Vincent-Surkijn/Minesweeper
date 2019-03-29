@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.Scanner;
 
 public class Main {
@@ -133,10 +134,13 @@ public class Main {
         //boolean calculation if input in valid
         boolean validinput =
                 inputstring.length() == 4 || inputstring.length() == 5
-                && inputstring.charAt(0) == 'f' || inputstring.charAt(0) == 'c'
+				&& Character.isLetter(inputstring.charAt(2))
+			    && inputstring.charAt(0) == 'f' || inputstring.charAt(0) == 'c'
+				&& Character.isDigit(inputstring.charAt(3))
                 && inputstring.charAt(1) == ':'
                 && 0 < CharToInt(inputstring.charAt(2)) && CharToInt(inputstring.charAt(2)) < MineField.getHight()
-                && Integer.parseInt(inputstring.substring(3)) < MineField.getLenght();
+                && Integer.parseInt(inputstring.substring(3)) < MineField.getLenght()
+		   		 ;
         if(!validinput){
             System.out.println("\n\nInvalid input");
             return true;
@@ -200,5 +204,6 @@ public class Main {
 	public static int getAmountMines(){
 		return amountMines;
 	}
+
 
 }

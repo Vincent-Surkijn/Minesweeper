@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Grid extends Main{
+public class Grid{
 
 	private Tile[][] grid;
 
