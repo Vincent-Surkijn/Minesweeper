@@ -103,7 +103,7 @@ public class Main {
 	 */
 	private static void showGameScreen() {
 		System.out.println("flags left to place: "+ (amountMines - MineField.getAmountFlags()) +"\n\n");
-		System.out.println(MineField.mineFieldToString());
+		System.out.println(MineField.mineFieldToString(true));
 	}
 
 	/**

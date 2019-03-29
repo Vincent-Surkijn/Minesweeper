@@ -19,28 +19,36 @@ public abstract class Tile {
     /**
      * returns a string combination of 3 charaters spesific to this tile
      */
-	public String toString() {
-		if(!flagged){
-            if(isvisual){
-                if(mine){
-                    return "O~*";
-                }
-                else{
-                    if (neighbors == 0){
-                        return " _ ";
-                    }
-                    else {
-                        return " " + neighbors + " ";
-                    }
-                }
-            }
-            else{
-                return "[ ]";
-            }
+    public String toString(boolean debug) {
+		if(debug) {
+			if (mine) {
+				return "O~*";
+			} else {
+				if (neighbors == 0) {
+					return " _ ";
+				} else {
+					return " " + neighbors + " ";
+				}
+			}
+		} else{
+			if (!flagged) {
+				if (isvisual) {
+					if (mine) {
+						return "O~*";
+					} else {
+						if (neighbors == 0) {
+							return " _ ";
+						} else {
+							return " " + neighbors + " ";
+						}
+					}
+				} else {
+					return "[ ]";
+				}
+			} else {
+				return "[F]";
+			}
 		}
-		else{
-		    return "[F]";
-        }
 	}
 
     /**
