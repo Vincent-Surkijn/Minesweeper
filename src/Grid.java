@@ -3,7 +3,6 @@ import java.util.Random;
 public class Grid extends Main{
 
 	private Tile[][] grid;
-	//private int minesleft;
 
 	/**
 	 * First makes random couples for the Mine coordinates.
@@ -12,8 +11,6 @@ public class Grid extends Main{
 	 * also if the value of the size is bigger as 16 then only the with would grow wider
 	 *
 	 * The coordinates are like this 'grid[x][y]' with the 0 point at the top left corner of the grid
-	 * @param size
-	 * @param amountMines
 	 */
 	public Grid(int size, int amountMines) {
 		//creating empty grid
@@ -34,37 +31,47 @@ public class Grid extends Main{
 			//form [[x,y]]
 		}
 
-		//makes acual tiles in the grid mines and empties
-		for(int x = 0; x < grid.length; x++){
-			for(int y= 0; y < grid[0].length; y++){
+		//makes actual tiles in the grid mines and empties
+		for(int column = 0; column < grid.length; column++){
+			for(int row = 0; row < grid[0].length; row++){
 				boolean wasMine = false;
 				for(int[] coor : minecoordinates){
-					int[] place = {x, y};
+					int[] place = {column, row};
 					if(coor[0] == place[0] && coor[1] == place[1]){
-						grid[x][y] = new MineTile(x, Main.IntToChar(y));
+						grid[column][row] = new MineTile();
 						wasMine = true;
 						}
 					}
 				if(!wasMine){
-					grid[x][y] = new EmptyTiles(x, Main.IntToChar(y));
+					grid[column][row] = new EmptyTiles();
 				}
 			}
 		}
+		//count the neighbors of all the empty tiles
+		setAllNeighbors();
 	}
 
+	/**
+	 * methods who return the lenght and hight of the grid
+	 */
 	public int getLenght(){
 		return grid.length;
 	}
+
+	public int getHight(){
+		return grid[0].length;
+	}
+
+	public Tile getTile(int row, int column){
+		return grid[column][row];
+	}
+
 	/**
 	 * Makes a ordered string of the minefield (looking if the tiles are hidden or not)
 	 */
-	public Tile getTile(int row, int column){
-		return grid[row][column];
-	}
-
 	public String mineFieldToString() {
 		String outputstring = "|";
-		for(int i = 0; i < grid.length; i++){
+		for(int i = -1; i < grid.length; i++){
 			if(i < 9){
 				outputstring += 0;
 			}
@@ -72,22 +79,14 @@ public class Grid extends Main{
 		}
 		outputstring += "\n";
 
-		for(int y = 0; y < grid[0].length; y++){
-			outputstring += Main.IntToChar(y);
-			for(int x = 0; x < grid.length; x++){
-				outputstring += grid[x][y].toString();
+		for(int row = 0; row < grid[0].length; row++){
+			outputstring += Main.IntToChar(row);
+			for(int column = 0; column < grid.length; column++){
+				outputstring += grid[column][row].toString();
 			}
 			outputstring += "\n";
 		}
 		return outputstring;
-	}
-
-	/**
-	 * it let's all tiles reset their neighbors value and recount them.
-	 */
-	public void recountNeighbors() {
-		// TODO - implement Grid.recountNeighbors
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -106,19 +105,6 @@ public class Grid extends Main{
 	}
 
 	/**
-	 * this enables a Tile at (row, column) and will decide which actions the tile must make by determining if it has been flagged or clicked
-	 * it returns a string that can be printed
-	 * Like (Tile is out of bounds) or (Tile is already clicked) or (you can't click flagged tiles)
-	 * @param column
-	 * @param row
-	 * @param flag
-	 */
-	public String activateTile(char column, int row, boolean flag) {
-		// TODO - implement Grid.activateTile
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Checks if there is a mine in the grid with a visual true
 	 */
 	public boolean triggeredMine() {
@@ -133,54 +119,103 @@ public class Grid extends Main{
 	}
 
 	/**
-	 * 
-	 * @param row
-	 * @param column
+	 * Checks the mine
 	 */
-	public int CheckMine(int row,int column) {
-		if (row < 0 || row > size - 1|| column < 0 || column > columnSize - 1) {
+	private int CheckMine(int row, int column) {
+		if (row < 0 || row >= grid[0].length || column < 0 || column >= grid.length) {
 			return 0;
 		}
 		else {
-			Tile tileToCheck = grid[row][column];
-			if (tileToCheck.mine) {
+			if (grid[column][row].isMine()) {
 				return 1;
 			} else {
 				return 0;
 			}
 		}
 	}
-	public int checkNeighbors(int row, int column){
+	private int checkNeighbors(int row, int column){
 		int neighbors = 0;
-		neighbors += CheckMine(row, column);
+		neighbors += CheckMine(row + 1, column + 1);
 		neighbors += CheckMine(row, column + 1);
-		neighbors += CheckMine(row, column - 1);
+		neighbors += CheckMine(row - 1, column + 1);
 		neighbors += CheckMine(row + 1,column);
 		neighbors += CheckMine(row - 1, column);
-		neighbors += CheckMine(row + 1, column + 1);
 		neighbors += CheckMine(row - 1, column - 1);
-        neighbors += CheckMine(row + 1, column - 1);
-        neighbors += CheckMine(row - 1, column + 1);
-		grid[row][column].neighbors = neighbors;
-		grid[row][column].isvisual = true;
+		neighbors += CheckMine(row, column - 1);
+		neighbors += CheckMine(row + 1, column - 1);
 		return neighbors;
 	}
 
-    public boolean checkIfWon(){
-        boolean won = false;
-	    int notVisual = 0;
-	    for (Tile[] tiles: grid) {
-            for(Tile tile: tiles){
-                if (!tile.mine) {
-                    if (!tile.isvisual) {
-                        notVisual++;
-                    }
-                }
-            }
-        }
-	    if (notVisual == 0){
-            won = true;
-        }
-	    return won;
-    }
+	private void setAllNeighbors(){
+		for(int row = 0; row < grid[0].length; row++){
+			for(int column = 0; column < grid.length; column++){
+				if(!grid[column][row].isMine()){
+					grid[column][row].setNeighbors(this.checkNeighbors(row,column));
+				}
+			}
+		}
+	}
+
+	public void makeTileVisual(int row, int column){
+		if(row >= 0 && row < grid[0].length && column >= 0 && column < grid.length && !grid[column][row].isvisual){
+			System.out.println("row"+row+"column"+column);
+			grid[column][row].toString();
+			grid[column][row].makeVisual();
+			if(grid[column][row].zeroNeighbors()){
+				makeTileVisual(row+1,column);
+				makeTileVisual(row-1,column);
+				makeTileVisual(row,column+1);
+				makeTileVisual(row,column-1);
+			}
+		}
+	}
+
+	public void makeallvisual(){
+		for(Tile[] column: grid){
+			for(Tile tile: column){
+				tile.makeVisual();
+			}
+		}
+	}
+
+	public boolean checkIfWon(){
+		boolean won = false;
+		int notVisual = 0;
+		int mineFlagged = 0;
+		for (Tile[] tiles: grid) {
+			for(Tile tile: tiles){
+				if (!tile.mine) {
+					if (!tile.isvisual) {
+						notVisual++;
+					}
+				}
+				else{
+					if(tile.flagged){
+						mineFlagged++;
+					}
+				}
+			}
+		}
+		if (notVisual == 0){
+			won = true;
+			System.out.println("you have clicked all empty tiles!");
+		}
+		if (mineFlagged == Main.getAmountMines()){
+			won = true;
+			System.out.println("You have flagged all mines!");
+		}
+		return won;
+	}
+
+	public int getAmountFlags(){
+		int tileFlagged = 0;
+		for (Tile[] tiles: grid) {
+			for(Tile tile: tiles){
+				if(tile.flagged){
+					tileFlagged++;
+				}
+			}
+		}
+		return tileFlagged;
+	}
 }
