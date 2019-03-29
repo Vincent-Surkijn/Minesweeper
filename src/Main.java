@@ -133,15 +133,7 @@ public class Main {
             scan = new Scanner(System.in);
             inputstring = scan.next().toLowerCase().trim();
         }
-        //boolean calculation if input in valid
-        boolean validinput =
-                inputstring.length() == 4 || inputstring.length() == 5
-                && inputstring.charAt(0) == 'f' || inputstring.charAt(0) == 'c'
-                && inputstring.charAt(1) == ':'
-                && 0 < CharToInt(inputstring.charAt(2)) && CharToInt(inputstring.charAt(2)) < MineField.getHight()
-                && Integer.parseInt(inputstring.substring(3)) < MineField.getLenght();
-
-        if(!validinput){
+        if(!validInput(inputstring)){
             System.out.println("\n\nInvalid input");
             return true;
         }
@@ -150,6 +142,34 @@ public class Main {
             return GameAlgorithm(inputstring);
         }
 	}
+
+	private static boolean validInput(String input){
+	    //checks click or flag and if the right way of inputmethod is used
+	    boolean isvalid = input.length() == 4 || input.length() == 5 && input.charAt(0) == 'f' || input.charAt(0) == 'c'
+                && input.charAt(1) == ':';
+        //checks the row
+	    if(Character.isLetter(input.charAt(2))) {
+            isvalid = isvalid && (0 <= CharToInt(input.charAt(2)) && CharToInt(input.charAt(2)) < MineField.getHight());
+        } else
+            {return false;}
+	    //checks the column
+        if(input.length() == 4) {
+            if (Character.isDigit(input.charAt(3))) {
+                isvalid = isvalid && Integer.parseInt(input.substring(3)) < MineField.getLenght();
+            } else{
+                return false;
+            }
+        }
+        if(input.length() == 5){
+            if (Character.isDigit(input.charAt(3)) && Character.isDigit(input.charAt(4))) {
+                isvalid = isvalid && Integer.parseInt(input.substring(3)) < MineField.getLenght();
+            }
+            else{
+                return false;
+            }
+        }
+	    return isvalid;
+    }
 
 	/**
      * This class contains the actual algorithm for the game itself
