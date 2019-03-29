@@ -24,11 +24,21 @@ public class Grid{
 		int[][] minecoordinates = new int[amountMines][2];
 		Random rand = new Random();
 
-		for(int r = 0; r < amountMines; r++ ){
+		while(minecoordinates.length < amountMines ){
 			//catch overlap
 			int[] minecoordinate = {rand.nextInt(grid.length), rand.nextInt(grid[0].length)};
-			minecoordinates[r] = minecoordinate;
-			//form [[x,y]]
+			int r = 0;
+			boolean sameCoordinate = false;
+			for (int[] coordinate: minecoordinates ) {
+				if (minecoordinate == coordinate){
+					sameCoordinate = true;
+				}
+			}
+			if(!sameCoordinate){
+				minecoordinates[r] = minecoordinate;
+				//form [[x,y]]}
+				r++;
+			}
 		}
 
 		//makes actual tiles in the grid mines and empties
