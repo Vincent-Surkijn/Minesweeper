@@ -79,20 +79,20 @@ public class Grid{
 	/**
 	 * Makes a ordered string of the minefield (looking if the tiles are hidden or not)
 	 */
-	public String mineFieldToString() {
+	public String mineFieldToString(boolean debug) {
 		String outputstring = "|";
-		for(int i = -1; i < grid.length; i++){
+		for(int i = 0; i < grid.length; i++){
 			if(i < 9){
 				outputstring += 0;
 			}
-			outputstring += (i+1)+"|";
+			outputstring += (i)+"|";
 		}
 		outputstring += "\n";
 
 		for(int row = 0; row < grid[0].length; row++){
 			outputstring += Main.IntToChar(row);
 			for(int column = 0; column < grid.length; column++){
-				outputstring += grid[column][row].toString();
+				outputstring += grid[column][row].toString(debug);
 			}
 			outputstring += "\n";
 		}
