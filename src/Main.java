@@ -6,6 +6,7 @@ public class Main {
 	private static char[] alphabet;
 	private static Scanner scan;
 	private static int amountMines;
+	private static boolean firstclick;
 
     /**
 	 * the heard of the game. It start by asking the difficulty then it creates a minefield
@@ -22,6 +23,8 @@ public class Main {
 		alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 		//indicator the game is still in proces
 		boolean running = true;
+		//indicator to check if the game is in it's first round.
+        firstclick = true;
         //full program loop
         while(running){
             //grid creation depending on difficulty
@@ -55,7 +58,7 @@ public class Main {
 			else {
 				System.out.println("You won!");
 			}
-			MineField.makeallvisual();
+			MineField.makeAllVisual();
 			showGameScreen();
 		}
 	}
@@ -99,7 +102,7 @@ public class Main {
 	 * shows the grid and all the other features like how many bombs left and difficulty and so on...
 	 */
 	private static void showGameScreen() {
-		System.out.println("Amount of mines:"+ MineField.countMinesLeft()+"\n\n");
+		System.out.println("flags left to place: "+ (amountMines - MineField.getAmountFlags()) +"\n\n");
 		System.out.println(MineField.mineFieldToString());
 	}
 
@@ -137,6 +140,7 @@ public class Main {
                 && inputstring.charAt(1) == ':'
                 && 0 < CharToInt(inputstring.charAt(2)) && CharToInt(inputstring.charAt(2)) < MineField.getHight()
                 && Integer.parseInt(inputstring.substring(3)) < MineField.getLenght();
+
         if(!validinput){
             System.out.println("\n\nInvalid input");
             return true;
@@ -166,8 +170,11 @@ public class Main {
 	    	return false;
         }
 	    if(input.split(":")[0].equals("c") && !ChosenTile.isFlagged()){
-            MineField.makeTileVisual(CharToInt(input.charAt(2)), Integer.parseInt(input.substring(3)));
-            System.out.println("komt hier");
+            while(firstclick && MineField.getTile(CharToInt(input.charAt(2)), Integer.parseInt(input.substring(3))).isMine()){
+                MineField = new Grid(MineField.getLenght(), amountMines);
+            }
+            firstclick = false;
+	        MineField.makeTileVisual(CharToInt(input.charAt(2)), Integer.parseInt(input.substring(3)));
             return false;
         }
 	    else{

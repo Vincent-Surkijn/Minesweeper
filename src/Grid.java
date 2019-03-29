@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Grid extends Main{
+public class Grid{
 
 	private Tile[][] grid;
 
@@ -133,6 +133,7 @@ public class Grid extends Main{
 			}
 		}
 	}
+
 	private int checkNeighbors(int row, int column){
 		int neighbors = 0;
 		neighbors += CheckMine(row + 1, column + 1);
@@ -170,7 +171,7 @@ public class Grid extends Main{
 		}
 	}
 
-	public void makeallvisual(){
+	public void makeAllVisual(){
 		for(Tile[] column: grid){
 			for(Tile tile: column){
 				tile.makeVisual();
