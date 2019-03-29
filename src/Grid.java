@@ -71,7 +71,7 @@ public class Grid extends Main{
 	 */
 	public String mineFieldToString() {
 		String outputstring = "|";
-		for(int i = 0; i < grid.length; i++){
+		for(int i = -1; i < grid.length; i++){
 			if(i < 9){
 				outputstring += 0;
 			}
