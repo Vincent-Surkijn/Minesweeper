@@ -7,6 +7,7 @@ public class Main {
 	private static Scanner scan;
 	private static int amountMines;
 	private static boolean firstclick;
+	private static boolean debugging;
 
     /**
 	 * the heard of the game. It start by asking the difficulty then it creates a minefield
@@ -31,23 +32,26 @@ public class Main {
 			switch(DifficultyInput()){
 				case EASY:
 					amountMines =10;
-					MineField = new Grid(8, 10);
+					MineField = new Grid(8, amountMines);
 					break;
 				case MEDIUM:
 					amountMines = 40;
-					MineField = new Grid(16, 40);
+					MineField = new Grid(16, amountMines);
 					break;
 				case HARD:
 					amountMines = 99;
-					MineField = new Grid(30, 99);
+					MineField = new Grid(30, amountMines);
 					break;
 				case END:
 					running = false;
 					break;
+				case DEBUG:
+					debugging = true;
+					break;
 			}
 			//the iteration of one full game
 			while(!(MineField.triggeredMine() || MineField.checkIfWon()) && running){
-				showGameScreen();
+				showGameScreen(debugging);
 				while(inputUser()){
                     System.out.println("\nError\n");
                 }
@@ -59,7 +63,7 @@ public class Main {
 				System.out.println("You won!");
 			}
 			MineField.makeAllVisual();
-			showGameScreen();
+			showGameScreen(debugging);
 		}
 	}
 
@@ -92,6 +96,9 @@ public class Main {
 		if(input.equals("end")){
 			return Level.END;
 		}
+		if(input.equals("debug")){
+			return Level.DEBUG;
+		}
 		else{
 			System.out.println("\n\nSorry invalid input please try again\n\n");
 			return DifficultyInput();
@@ -101,9 +108,9 @@ public class Main {
 	/**
 	 * shows the grid and all the other features like how many bombs left and difficulty and so on...
 	 */
-	private static void showGameScreen() {
+	private static void showGameScreen(boolean debug) {
 		System.out.println("flags left to place: "+ (amountMines - MineField.getAmountFlags()) +"\n\n");
-		System.out.println(MineField.mineFieldToString(false));
+		System.out.println(MineField.mineFieldToString(debug));
 	}
 
 	/**

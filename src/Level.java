@@ -2,5 +2,6 @@ public enum Level {
 	EASY,
 	MEDIUM,
 	HARD,
-	END
+	END,
+	DEBUG
 }
