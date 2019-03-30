@@ -103,7 +103,7 @@ public class Main {
 	 */
 	private static void showGameScreen() {
 		System.out.println("flags left to place: "+ (amountMines - MineField.getAmountFlags()) +"\n\n");
-		System.out.println(MineField.mineFieldToString(true));
+		System.out.println(MineField.mineFieldToString(false));
 	}
 
 	/**
@@ -144,9 +144,18 @@ public class Main {
 	}
 
 	private static boolean validInput(String input){
-	    //checks click or flag and if the right way of inputmethod is used
-	    boolean isvalid = input.length() == 4 || input.length() == 5 && input.charAt(0) == 'f' || input.charAt(0) == 'c'
-                && input.charAt(1) == ':';
+	    boolean isvalid = false;
+		//checks right length
+		isvalid = input.length() == 4 || input.length() == 5;
+		if(!isvalid){
+			return false;
+		}
+		//checks flag or click and if there is a dubble point
+		isvalid = isvalid && input.charAt(0) == 'f' || input.charAt(0) == 'c'
+				&& input.charAt(1) == ':';
+	    if(!isvalid){
+	    	return false;
+		}
         //checks the row
 	    if(Character.isLetter(input.charAt(2))) {
             isvalid = isvalid && (0 <= CharToInt(input.charAt(2)) && CharToInt(input.charAt(2)) < MineField.getHight());
