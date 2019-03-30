@@ -49,6 +49,8 @@ public class Main {
 					break;
 				case DEBUG:
 					debugging = true;
+					amountMines = 99;
+					MineField = new Grid(30, amountMines);
 					break;
 			}
 			//the iteration of one full game
