@@ -23,22 +23,18 @@ public class Grid{
 		//randomly generating minecoordinates
 		int[][] minecoordinates = new int[amountMines][2];
 		Random rand = new Random();
-
-		while(minecoordinates.length < amountMines ){
+        int r = 0;
+		while(r < amountMines ){
 			//catch overlap
 			int[] minecoordinate = {rand.nextInt(grid.length), rand.nextInt(grid[0].length)};
-			int r = 0;
-			boolean sameCoordinate = false;
 			for (int[] coordinate: minecoordinates ) {
 				if (minecoordinate == coordinate){
-					sameCoordinate = true;
+                   minecoordinates[r] = null;
+					r--;
 				}
 			}
-			if(!sameCoordinate){
-				minecoordinates[r] = minecoordinate;
-				//form [[x,y]]}
-				r++;
-			}
+			minecoordinates[r] = minecoordinate;
+			r++;
 		}
 
 		//makes actual tiles in the grid mines and empties
