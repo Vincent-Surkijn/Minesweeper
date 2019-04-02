@@ -7,6 +7,7 @@ public class Main {
 	private static Scanner scan;
 	private static int amountMines;
 	private static boolean firstclick;
+	private static boolean debugging;
 
     /**
 	 * the heard of the game. It start by asking the difficulty then it creates a minefield
@@ -25,29 +26,36 @@ public class Main {
 		boolean running = true;
 		//indicator to check if the game is in it's first round.
         firstclick = true;
+        //debugging off
+		debugging = false;
         //full program loop
         while(running){
             //grid creation depending on difficulty
 			switch(DifficultyInput()){
 				case EASY:
 					amountMines =10;
-					MineField = new Grid(8, 10);
+					MineField = new Grid(8, amountMines);
 					break;
 				case MEDIUM:
 					amountMines = 40;
-					MineField = new Grid(16, 40);
+					MineField = new Grid(16, amountMines);
 					break;
 				case HARD:
 					amountMines = 99;
-					MineField = new Grid(30, 99);
+					MineField = new Grid(30, amountMines);
 					break;
 				case END:
 					running = false;
 					break;
+				case DEBUG:
+					debugging = true;
+					amountMines = 99;
+					MineField = new Grid(30, amountMines);
+					break;
 			}
 			//the iteration of one full game
 			while(!(MineField.triggeredMine() || MineField.checkIfWon()) && running){
-				showGameScreen();
+				showGameScreen(debugging);
 				while(inputUser()){
                     System.out.println("\nError\n");
                 }
@@ -59,7 +67,7 @@ public class Main {
 				System.out.println("You won!");
 			}
 			MineField.makeAllVisual();
-			showGameScreen();
+			showGameScreen(debugging);
 		}
 	}
 
@@ -92,6 +100,9 @@ public class Main {
 		if(input.equals("end")){
 			return Level.END;
 		}
+		if(input.equals("debug")){
+			return Level.DEBUG;
+		}
 		else{
 			System.out.println("\n\nSorry invalid input please try again\n\n");
 			return DifficultyInput();
@@ -101,10 +112,9 @@ public class Main {
 	/**
 	 * shows the grid and all the other features like how many bombs left and difficulty and so on...
 	 */
-	private static void showGameScreen() {
+	private static void showGameScreen(boolean debug) {
 		System.out.println("flags left to place: "+ (amountMines - MineField.getAmountFlags()) +"\n\n");
-		System.out.println(MineField.mineFieldToString(true));
-		System.out.println(MineField.countMinesLeft());
+		System.out.println(MineField.mineFieldToString(debug));
 	}
 
 	/**
@@ -134,15 +144,7 @@ public class Main {
             scan = new Scanner(System.in);
             inputstring = scan.next().toLowerCase().trim();
         }
-        //boolean calculation if input in valid
-        boolean validinput =
-                inputstring.length() == 4 || inputstring.length() == 5
-                && inputstring.charAt(0) == 'f' || inputstring.charAt(0) == 'c'
-                && inputstring.charAt(1) == ':'
-                && 0 < CharToInt(inputstring.charAt(2)) && CharToInt(inputstring.charAt(2)) < MineField.getHight()
-                && Integer.parseInt(inputstring.substring(3)) < MineField.getLenght();
-
-        if(!validinput){
+        if(!validInput(inputstring)){
             System.out.println("\n\nInvalid input");
             return true;
         }
@@ -151,6 +153,43 @@ public class Main {
             return GameAlgorithm(inputstring);
         }
 	}
+
+	private static boolean validInput(String input){
+	    boolean isvalid = false;
+		//checks right length
+		isvalid = input.length() == 4 || input.length() == 5;
+		if(!isvalid){
+			return false;
+		}
+		//checks flag or click and if there is a dubble point
+		isvalid = isvalid && input.charAt(0) == 'f' || input.charAt(0) == 'c'
+				&& input.charAt(1) == ':';
+	    if(!isvalid){
+	    	return false;
+		}
+        //checks the row
+	    if(Character.isLetter(input.charAt(2))) {
+            isvalid = isvalid && (0 <= CharToInt(input.charAt(2)) && CharToInt(input.charAt(2)) < MineField.getHight());
+        } else
+            {return false;}
+	    //checks the column
+        if(input.length() == 4) {
+            if (Character.isDigit(input.charAt(3))) {
+                isvalid = isvalid && Integer.parseInt(input.substring(3)) < MineField.getLenght();
+            } else{
+                return false;
+            }
+        }
+        if(input.length() == 5){
+            if (Character.isDigit(input.charAt(3)) && Character.isDigit(input.charAt(4))) {
+                isvalid = isvalid && Integer.parseInt(input.substring(3)) < MineField.getLenght();
+            }
+            else{
+                return false;
+            }
+        }
+	    return isvalid;
+    }
 
 	/**
      * This class contains the actual algorithm for the game itself
