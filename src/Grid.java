@@ -27,6 +27,9 @@ public class Grid{
 		int[][] minecoordinates = new int[amountMines][2];
 		minecoordinates = RandomCoordinateCouples(minecoordinates);
 
+		minecoordinates = RandomCoordinateCouples(minecoordinates);
+
+
 		//makes actual tiles in the grid mines and empties
 		for(int column = 0; column < grid.length; column++){
 			for(int row = 0; row < grid[0].length; row++){

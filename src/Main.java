@@ -54,11 +54,16 @@ public class Main {
 					break;
 			}
 			//the iteration of one full game
-			while(!(MineField.triggeredMine() || MineField.checkIfWon()) && running){
-				showGameScreen(debugging);
-				while(inputUser()){
-                    System.out.println("\nError\n");
-                }
+			if (running) {
+				while (!(MineField.triggeredMine() || MineField.checkIfWon())) {
+					showGameScreen(debugging);
+					while (inputUser()) {
+						System.out.println("\nError\n");
+					}
+				}
+			}
+			else {
+				System.exit(1);
 			}
 			if(MineField.triggeredMine()) {
 				System.out.println("Game over");
