@@ -27,7 +27,7 @@ public class Main {
 		//indicator to check if the game is in it's first round.
         firstclick = true;
         //debugging off
-		debugging = false;
+		debugging = true;
         //full program loop
         while(running){
             //grid creation depending on difficulty
