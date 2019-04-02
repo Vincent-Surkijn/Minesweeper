@@ -177,15 +177,26 @@ public class Grid{
 		}
 	}
 
-	public void makeTileVisual(int row, int column){
-		if(row >= 0 && row < grid[0].length && column >= 0 && column < grid.length && !grid[column][row].isvisual){
-			grid[column][row].toString();
+	public void makeTileVisual(int row, int column) {
+		if (row >= 0 && row < grid[0].length && column >= 0 && column < grid.length && !grid[column][row].isvisual) {
 			grid[column][row].makeVisual();
-			if(grid[column][row].zeroNeighbors()){
-				makeTileVisual(row+1,column);
-				makeTileVisual(row-1,column);
-				makeTileVisual(row,column+1);
-				makeTileVisual(row,column-1);
+			if (grid[column][row].zeroNeighbors()) {
+				makeTileVisual(row + 1, column);
+				makeTileVisual(row - 1, column);
+				makeTileVisual(row, column + 1);
+				makeTileVisual(row, column - 1);
+				if(!grid[column-1][row-1].zeroNeighbors()){
+					makeTileVisual(row-1, column-1);
+				}
+				if(!grid[column+1][row-1].zeroNeighbors()) {
+					makeTileVisual(row-1, column + 1);
+				}
+				if(!grid[column-1][row+1].zeroNeighbors()){
+					makeTileVisual(row+1, column-1);
+				}
+				if(!grid[column+1][row+1].zeroNeighbors()){
+					makeTileVisual(row+1, column+1);
+				}
 			}
 		}
 	}
