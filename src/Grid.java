@@ -186,10 +186,6 @@ public class Grid{
 				makeTileVisual(row-1,column);
 				makeTileVisual(row,column+1);
 				makeTileVisual(row,column-1);
-				makeTileVisual(row-1,column+1);
-				makeTileVisual(row+1 ,column-1);
-				makeTileVisual(row+1,column+1);
-				makeTileVisual(row-1,column-1);
 			}
 		}
 	}
