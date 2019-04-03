@@ -179,13 +179,17 @@ public class Grid{
 
 	public void makeTileVisual(int row, int column){
 		if(row >= 0 && row < grid[0].length && column >= 0 && column < grid.length && !grid[column][row].isvisual){
-			grid[column][row].toString();
 			grid[column][row].makeVisual();
+			grid[column][row].toString();
 			if(grid[column][row].zeroNeighbors()){
 				makeTileVisual(row+1,column);
 				makeTileVisual(row-1,column);
 				makeTileVisual(row,column+1);
 				makeTileVisual(row,column-1);
+				makeTileVisual(row-1,column+1);
+				makeTileVisual(row+1 ,column-1);
+				makeTileVisual(row+1,column+1);
+				makeTileVisual(row-1,column-1);
 			}
 		}
 	}

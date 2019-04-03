@@ -66,9 +66,11 @@ public class Main {
 				System.exit(1);
 			}
 			if(MineField.triggeredMine()) {
+				firstclick = true;
 				System.out.println("Game over");
 			}
 			else {
+				firstclick = true;
 				System.out.println("You won!");
 			}
 			MineField.makeAllVisual();
