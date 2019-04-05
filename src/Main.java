@@ -10,7 +10,7 @@ public class Main {
 	private static boolean debugging;
 
     /**
-	 * the heard of the game. It start by asking the difficulty then it creates a minefield
+	 * the hearth of the game. It start by asking the difficulty then it creates a minefield
 	 * the game begins.
 	 * the game itself is a loop of 3 parts
 	 * first it shows the grid
@@ -66,13 +66,12 @@ public class Main {
 				System.exit(1);
 			}
 			if(MineField.triggeredMine()) {
-				firstclick = true;
 				System.out.println("Game over");
 			}
 			else {
-				firstclick = true;
 				System.out.println("You won!");
 			}
+			firstclick = true;
 			MineField.makeAllVisual();
 			showGameScreen(debugging);
 		}
@@ -248,10 +247,12 @@ public class Main {
      * converts a integer to a character of the alphabet
      */
 	public static char IntToChar(int number){
+
 		return alphabet[number];
 	}
 
 	public static int getAmountMines(){
+
 		return amountMines;
 	}
 
